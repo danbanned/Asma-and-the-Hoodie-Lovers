@@ -19,6 +19,9 @@ export default function WeatherCard({ data }) {
   const windSpeed = Math.round(data.wind?.speed || 0); // The ?. handles missing wind data gracefully
   const windGusts = Math.round(data.wind?.gust || 0);
   const humidity = Math.round(data.main.humidity);
+  const pressure = data.main.pressure;
+  const visibility = data.visibility ? Math.round(data.visibility / 1609) : 'N/A'; // Convert meters to miles
+  const cloudiness = data.clouds?.all || 0; // Cloud coverage percentage
 
   console.log("Processed temperature:", temp);
   console.log("Processed city:", data.name);
@@ -50,12 +53,12 @@ export default function WeatherCard({ data }) {
                   <td className="status">{windSpeed} mph</td>
                 </tr>
                 <tr>
-                  <td className="status">Wind Gusts:</td>
-                  <td className="status">{windGusts} mph</td>
+                  <td className="status">Humidity:</td>
+                  <td className="status">{humidity}%</td>
                 </tr>
                 <tr>
-                  <td className="status">Air Quality:</td>
-                  <td className="status">poor</td> {/* Hard-coded for now - API doesn't include this */}
+                  <td className="status">Clouds:</td>
+                  <td className="status">{cloudiness}%</td>
                 </tr>
               </tbody>
             </table>
@@ -65,36 +68,36 @@ export default function WeatherCard({ data }) {
 
       {/* Right side - Weekly forecast (mock data for now) */}
       <div>
-        <div className="Firstpage-Nav">Philadelphia weather this week</div>
+        <div className="Firstpage-Nav">{data.name} weather this week</div>
         <div className="page-nav-text">
-          {/* 5-day temperature forecast - these are placeholder values */}
+          {/* 5-day temperature forecast - using variations of current temp since we don't have forecast API */}
           {/* In the future, we could get this from a different API endpoint */}
           <div className="date-slots">
-            <div className="slot">57</div> {/* Mon */}
-            <div className="slot">58</div> {/* Tue */}
-            <div className="slot">65</div> {/* Wed */}
-            <div className="slot">65</div> {/* Thu */}
-            <div className="slot">67</div> {/* Fri */}
+            <div className="slot">{temp - 2}</div> {/* Today -2 */}
+            <div className="slot">{temp}</div> {/* Current temp */}
+            <div className="slot">{temp + 3}</div> {/* Today +3 */}
+            <div className="slot">{temp + 5}</div> {/* Today +5 */}
+            <div className="slot">{temp + 7}</div> {/* Today +7 */}
           </div>
           
-          {/* Duplicate weather info in a different layout - matches the wireframe design */}
+          {/* Weather details using actual API data */}
           <div className="bottomslot">
             <div className="weather-details">
               <div className="weather-detail">
-                <span>Air Quality:</span>
-                <span>poor</span> {/* Still hard-coded */}
+                <span>Humidity:</span>
+                <span>{humidity}%</span>
               </div>
               <div className="weather-detail">
                 <span>Feels like:</span>
                 <span>{feelsLike}°F</span>
               </div>
               <div className="weather-detail">
-                <span>Wind Gusts:</span>
-                <span>{windGusts} mph</span>
+                <span>Pressure:</span>
+                <span>{data.main.pressure} hPa</span>
               </div>
               <div className="weather-detail">
-                <span>Wind:</span>
-                <span>{windSpeed} mph</span>
+                <span>Visibility:</span>
+                <span>{Math.round(data.visibility / 1609)} mi</span>
               </div>
             </div>
           </div>
