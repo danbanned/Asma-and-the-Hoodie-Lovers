@@ -1,92 +1,113 @@
+// This component shows the weather - current conditions plus the weekly forecast
+// Built to handle OpenWeather API data, with safety checks so it won't crash
+import { useContext } from "react";
+import { WeatherContext } from "../context/WeatherContext";
 
-
+// The main weather display - shows today's weather and the 5-day forecast
 export default function WeatherCard({ data }) {
-  const timestamp = data.dt; // from API
-  const date = new Date(timestamp * 1000); // multiply by 1000 to convert seconds → milliseconds
-  const day = date.toLocaleDateString("en-US", { weekday: "long" }); // "Monday"
-  const month = date.toLocaleDateString("en-US", { month: "long" }); // "October"
-  const time = date.toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit" }); // "3:42 PM"
-  
- 
+  // grab the forecast data from my weather storage
+  const { forecastData } = useContext(WeatherContext);
+  // make sure I have weather data before trying to show it
+  // prevents those nasty "can't read property" crashes
+  if (!data || !data.main || !data.weather || !data.weather[0]) {
+    return <div>Enter a city name and click Search to see weather data</div>;
+  }
 
+  // help me debug when temperatures look weird
+  console.log("Weather data in WeatherCard:", data); 
+  console.log("Raw temperature:", data.main.temp);
+  console.log("City name:", data.name);
+
+  // clean up the numbers so they look nice on screen
+  // nobody wants to see "47.382 degrees" - just give me "47"
+  const temp = Math.round(data.main.temp);
+  const feelsLike = Math.round(data.main.feels_like);
+  const windSpeed = Math.round(data.wind?.speed || 0); // the ?. keeps it from crashing if wind data is missing
+  const windGusts = Math.round(data.wind?.gust || 0);
+  const humidity = Math.round(data.main.humidity);
+  const pressure = data.main.pressure;
+  const visibility = data.visibility ? Math.round(data.visibility / 1609) : 'N/A'; // turn meters into miles because America
+  const cloudiness = data.clouds?.all || 0; // how cloudy it is as a percentage
+
+  console.log("Processed temperature:", temp);
+  console.log("Processed city:", data.name);
 
   return (
-    <>
-    <div className="weather-nav">Todays Weather 
-  <div className="MainPage">
-    <div className="navbar">
-      <sub className="weather-nav-text"> </sub>
-    </div>
-  <div className="Firstpage-Nav">Todays Weather 
-    <div className="page-nav-text">.
-      <div className="weather-app-panel">
-          <div className="box"> {data.name || "Philadelphia"} </div>
-          <div className="boxnum"> {data.main.temp || 57} °C </div>
-          <div className="box"> {data.weather[0].description || "Mostly Cloudy Today"} </div> 
+    <div className="MainPage">
+      {/* left side shows today's weather */}
+      <div>
+        <div className="weather-nav">Today's Weather</div>
+        <div className="weather-nav-text">
+          {/* the main weather info - city name, temperature, and what it's like outside */}
+          <div className="weather-app-panel">
+            <div className="box">{data.name}</div>
+            <div className="boxnum">{temp}°F</div> {/* the big temperature number */}
+            <div className="box">{data.weather[0].description}</div> {/* like "partly cloudy" or "sunny" */}
+          </div>
+          
+          {/* extra weather info in a neat table */}
+          {/* might switch this to CSS grid someday to make it work better on phones */}
+          <div className="weather-app-status">
+            <table>
+              <tbody>
+                <tr>
+                  <td className="status">Feels Like:</td>
+                  <td className="status">{feelsLike}°F</td>
+                </tr>
+                <tr>
+                  <td className="status">Wind:</td>
+                  <td className="status">{windSpeed} mph</td>
+                </tr>
+                <tr>
+                  <td className="status">Humidity:</td>
+                  <td className="status">{humidity}%</td>
+                </tr>
+                <tr>
+                  <td className="status">Clouds:</td>
+                  <td className="status">{cloudiness}%</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
       </div>
+
+      {/* right side shows the 5-day forecast */}
+      <div>
+        <div className="Firstpage-Nav">{data.name} • 5-Day Forecast</div>
+        <div className="page-nav-text forecast-pane">
+          <div className="forecast-grid">
+            {forecastData.length === 0 && (
+              <div className="forecast-empty">Search a city to load its forecast...</div>
+            )}
+            {forecastData.map((day) => (
+              <div key={day.date} className="forecast-item">
+                <div className="forecast-date">
+                  {new Date(day.date).toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric' })}
+                </div>
+                <img
+                  className="forecast-icon"
+                  src={`https://openweathermap.org/img/wn/${day.icon}@2x.png`}
+                  alt={day.description}
+                  loading="lazy"
+                />
+                <div className="forecast-temps">
+                  <span className="temp-high">{day.max}°</span>
+                  <span className="temp-low">{day.min}°</span>
+                </div>
+                <div className="forecast-desc">{day.description}</div>
+              </div>
+            ))}
+          </div>
+          {/* some extra current weather details at the bottom */}
+          <div className="current-extra">
+            <div><strong>Humidity:</strong> {humidity}%</div>
+            <div><strong>Feels:</strong> {feelsLike}°F</div>
+            <div><strong>Pressure:</strong> {pressure} hPa</div>
+            <div><strong>Visibility:</strong> {visibility} mi</div>
+          </div>
+        </div>
       </div>
     </div>
-
-       
-  <div className="Firstpage-Nav">
-    <div className="page-nav-text">THE WEATHER APP
-      <table className="weather-app-status">
-        <thead>
-        <tr>
-          <th className="status-dates"> {month || "10/"}</th>
-          <th className="status-dates"> {day || "26/"}</th>
-           <th className="status-dates"> {time || "8:00/"}</th>
-        </tr>
-      </thead>
-      
-    <tbody>
-        <tr>
-          <td className="status"> Feels Like </td>
-          <td className="status"> {data.main.feels_like || " 58"} </td>
-        </tr>
-        
-
-        <tr>
-          <td className="status"> Wind </td>
-          <td className="status"> {data.wind.deg || "  5"} mph </td>
-        </tr>
-
-        <tr>
-          <td className="status"> Wind Gusts </td>
-          <td className="status"> {data.wind.gust || " 4"} mph </td>
-        </tr>
-
-        <tr>
-          <td className="status"> Air Quality</td>
-          <td className="status"> {data.main.humidity || " poor"}</td>
-        </tr>
-        </tbody>
-      </table>
-      </div>
-      </div>
-      
-    </div>
-</div>
-
-<div className="dates">
-    <div className="date-slots">
-      <div className="slot">Wed</div>
-       <div className="slot">Thu</div>
-        <div className="slot">Fri</div>
-         <div className="slot">Sat</div>
-          <div className="slot">Sun</div>
-    </div>
-    
-
-    <div className="bottomslot">
-      <p>The weather forcast</p>
-      <button>TODAY</button>
-    </div>
-  </div>
-  </>
-   
-
-
-    
   );
 }

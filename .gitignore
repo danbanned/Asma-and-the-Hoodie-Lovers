@@ -24,4 +24,7 @@ dist-ssr
 *.sw?
 
 # Environment files (important!)
-.env
+*.env
+.env.local
+CODE_OVERVIEW.md
+TECH_GLOSSARY.md
