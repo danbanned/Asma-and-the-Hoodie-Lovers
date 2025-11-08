@@ -28,7 +28,7 @@ function WeatherDisplay() {
   return (
     <div>
       {/* UX: conditionally render to avoid accessing undefined fields */}
-      {weatherData ? <WeatherCard data={weatherData} /> : <p>Enter a city</p>}
+      {weatherData ? <WeatherCard data={weatherData} /> : <p></p>}
     </div>
   );
 }

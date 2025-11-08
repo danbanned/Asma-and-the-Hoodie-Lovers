@@ -2,12 +2,17 @@
 // Built to handle OpenWeather API data, with safety checks so it won't crash
 import { useContext } from "react";
 import { WeatherContext } from "../context/WeatherContext";
+import { useEffect, useState } from "react";
+import "../weather.css"
+
 
 // The main weather display - shows today's weather and the 5-day forecast
 export default function WeatherCard({ data }) {
   // grab the forecast data from my weather storage
   const { forecastData } = useContext(WeatherContext);
   // make sure I have weather data before trying to show it
+  const [video,setvideo] = useState("../public/main.mp4")
+
   // prevents those nasty "can't read property" crashes
   if (!data || !data.main || !data.weather || !data.weather[0]) {
     return <div>Enter a city name and click Search to see weather data</div>;
@@ -17,6 +22,15 @@ export default function WeatherCard({ data }) {
   console.log("Weather data in WeatherCard:", data); 
   console.log("Raw temperature:", data.main.temp);
   console.log("City name:", data.name);
+  console.log("City name:", data);
+
+const timestamp = data.dt
+
+const date = new Date(timestamp * 1000);
+//new Date() → gets right now (year, month, day, hour, minute, second).
+//Date is an object or data type used to work with times and calendar dates.
+
+
 
   // clean up the numbers so they look nice on screen
   // nobody wants to see "47.382 degrees" - just give me "47"
@@ -28,16 +42,33 @@ export default function WeatherCard({ data }) {
   const pressure = data.main.pressure;
   const visibility = data.visibility ? Math.round(data.visibility / 1609) : 'N/A'; // turn meters into miles because America
   const cloudiness = data.clouds?.all || 0; // how cloudy it is as a percentage
+  const time = date.toLocaleTimeString("end-US", {
+    weekday:"long",
+     month:"long",
+      day:"numeric",
+       year:"numeric",
+  },
+    "en-US",{ 
+      hour: "2-digit", 
+      minute: "2-digit" 
+    }); // "3:42 PM"
 
   console.log("Processed temperature:", temp);
   console.log("Processed city:", data.name);
 
+
+
   return (
+    <>
+    <video autoPlay loop muted className="background-video">
+        <source src={(video || "../cloudy.mp4")} type="video/mp4" />
+      </video>
     <div className="MainPage">
       {/* left side shows today's weather */}
       <div>
         <div className="weather-nav">Today's Weather</div>
-        <div className="weather-nav-text">
+        <div className="weather-nav-text" >current time
+          
           {/* the main weather info - city name, temperature, and what it's like outside */}
           <div className="weather-app-panel">
             <div className="box">{data.name}</div>
@@ -49,6 +80,12 @@ export default function WeatherCard({ data }) {
           {/* might switch this to CSS grid someday to make it work better on phones */}
           <div className="weather-app-status">
             <table>
+
+              <thead>
+                <th className="dates">
+                <th> {time}</th>
+                </th>
+              </thead>
               <tbody>
                 <tr>
                   <td className="status">Feels Like:</td>
@@ -69,6 +106,8 @@ export default function WeatherCard({ data }) {
               </tbody>
             </table>
           </div>
+        </div>
+        <div>
         </div>
       </div>
 
@@ -109,5 +148,6 @@ export default function WeatherCard({ data }) {
         </div>
       </div>
     </div>
+    </>
   );
 }

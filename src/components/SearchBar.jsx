@@ -2,10 +2,15 @@ import { useState, useContext } from "react";
 import axios from "axios"; // makes it easy to call the weather API
 import { summarizeForecast } from "../utils/forecast"; // turns messy 3-hour forecasts into clean daily ones
 import { WeatherContext } from "../context/WeatherContext";
+import "../searchbar.css"
 
 export default function SearchBar() {
   // keeps track of what city name the user typed
   const [city, setCity] = useState("");
+  const [video,setvideo] = useState("../public/cloudy.mp4")
+  const [visibleVideo, setVideoVisible] = useState(true);
+
+
   
   // get the functions to update weather data in my app
   const { setWeatherData, setForecastData } = useContext(WeatherContext);
@@ -74,6 +79,8 @@ export default function SearchBar() {
   };
 
   return (
+    <>
+    <div className="search-container">
     <form onSubmit={handleSubmit} aria-label="Search city weather">
       <input
         type="text"
@@ -83,5 +90,13 @@ export default function SearchBar() {
       />
       <button type="submit">Search</button> {/* enter key works because this is inside a form */}
     </form>
+
+    {visibleVideo && (
+        <video autoPlay loop muted className="background-video">
+          <source src={video} type="video/mp4" />
+        </video>
+      )}
+      </div>
+    </>
   );
 }

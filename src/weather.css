@@ -7,7 +7,6 @@
 
 /* main page styling to match my design */
 body { 
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
   /* nice subtle gradient background to make it look polished */
   background: linear-gradient(180deg, #eef4ff 0%, #f7fafc 100%);
   color: #333;
@@ -19,6 +18,7 @@ body {
   max-width: 1200px;
   margin: 0 auto;
   padding: 20px;
+  background-color: #11182700;
 }
 
 /* the main title at the top */
@@ -67,6 +67,17 @@ button {
   transition: background-color 0.2s;
 }
 
+.background-video {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: -1;
+  opacity: 80%;
+}
+
 button:hover {
   background: #357abd;
 }
@@ -88,8 +99,8 @@ button:hover {
 
 /* header for the left card that says "Today's Weather" */
 .weather-nav {
-  background: linear-gradient(135deg, #4a90e2 0%, #6aa9f4 100%);
-  color: white; 
+  background: linear-gradient(135deg, #4a91e2a5 0%, #6aa8f4b2 100%);
+  color: rgb(255, 255, 255); 
   padding: 8px 16px;
   font-size: 14px;
   font-weight: 500;
@@ -99,7 +110,7 @@ button:hover {
 }
 
 .weather-nav-text {
-  background: white;
+  background: rgba(255, 255, 255, 0.626);
   border: 1px solid #e0e0e0;
   border-top: none;
   border-radius: 0 0 8px 8px;
@@ -109,7 +120,7 @@ button:hover {
 
 /* the extra weather details table in the left card */
 .weather-app-status {
-  background: white;
+  background: rgba(255, 255, 255, 0.532);
   padding: 20px;
   border-top: 1px solid #e0e0e0;
 }
@@ -162,7 +173,7 @@ button:hover {
 }
 
 .page-nav-text {
-  background: white;
+  background: rgba(255, 255, 255, 0.613);
   border: 1px solid #e0e0e0;
   border-top: none;
   border-radius: 0 0 8px 8px;
@@ -172,7 +183,7 @@ button:hover {
 
 /* the main today's weather display area */
 .weather-app-panel {
-  background: white;
+  background: rgba(255, 255, 255, 0.565);
   padding: 30px 20px;
   text-align: center;
   display: flex;
