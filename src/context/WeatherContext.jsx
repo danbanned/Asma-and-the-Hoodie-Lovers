@@ -1,20 +1,21 @@
-// React Context for sharing weather data across the entire app
-// This lets us avoid prop drilling - passing data down through multiple component levels
+// Makes weather data available everywhere in the app without having to pass it around
+// Saves me from having to thread data through every single component
 import { createContext, useState } from "react";
 
-// Create the context - this is like creating a "global variable" that components can access
+// Think of this as my weather data storage that any component can tap into
 export const WeatherContext = createContext();
 
-// Provider component that wraps around our app and provides the weather state
-// Any child component can access weatherData and setWeatherData through useContext
+// This wraps my whole app and makes the weather data available to everything inside
+// Any component can just ask for the weather data instead of me having to pass it down
 export const WeatherProvider = ({ children }) => {
-  // This holds our current weather data from the API
-  // Starts as null until user searches for a city
+  // holds the current weather info (empty until someone searches)
   const [weatherData, setWeatherData] = useState(null);
+  // holds the 5-day forecast (clean daily summaries)
+  const [forecastData, setForecastData] = useState([]);
 
   return (
-    <WeatherContext.Provider value={{ weatherData, setWeatherData }}>
-      {children} {/* All the app components go here */}
+    <WeatherContext.Provider value={{ weatherData, setWeatherData, forecastData, setForecastData }}>
+      {children} {/* this is where all my app components live */}
     </WeatherContext.Provider>
   );
 };

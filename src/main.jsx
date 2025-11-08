@@ -1,11 +1,10 @@
-// Entry point for the React app - this is where everything starts
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
-import './weather.css' // Our custom styles
+import './weather.css' // my custom styling
 import App from './App.jsx'
 
-// Mount the React app to the 'root' div in index.html
-// StrictMode helps catch bugs during development by running some checks twice
+
+// StrictMode helps me catch bugs by running extra checks while I'm developing
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <App />

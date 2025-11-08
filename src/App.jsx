@@ -1,4 +1,3 @@
-// Main app component and imports
 import { useContext } from "react";
 import { WeatherProvider, WeatherContext } from "./context/WeatherContext";
 import WeatherCard from "./components/WeatherCard";
@@ -7,11 +6,11 @@ import SearchBar from "./components/SearchBar";
 // Root component - wraps everything in the weather context provider
 function App() {
   return (
-    <WeatherProvider> {/* This gives all child components access to weather data */}
+    <WeatherProvider> {/* Context provider: gives all child components access to weather data */}
       <div className="App">
-        <h1>Weather App</h1>
-        <SearchBar /> {/* Where users type city names */}
-        <WeatherDisplay /> {/* Shows weather info or prompts user to search */}
+        <h1>Weather App</h1> {/* Keep the title simple and scannable */}
+        <SearchBar /> {/* Input to trigger fetch + update context */}
+        <WeatherDisplay /> {/* Either shows a card or asks the user to search */}
       </div>
     </WeatherProvider>
   );
@@ -28,6 +27,7 @@ function WeatherDisplay() {
   // Show weather card if we have data, otherwise show a helpful message
   return (
     <div>
+      {/* UX: conditionally render to avoid accessing undefined fields */}
       {weatherData ? <WeatherCard data={weatherData} /> : <p>Enter a city</p>}
     </div>
   );

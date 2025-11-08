@@ -1,46 +1,52 @@
+// This component shows the weather - current conditions plus the weekly forecast
+// Built to handle OpenWeather API data, with safety checks so it won't crash
+import { useContext } from "react";
+import { WeatherContext } from "../context/WeatherContext";
 
-// Main weather display component - shows current conditions and weekly forecast
+// The main weather display - shows today's weather and the 5-day forecast
 export default function WeatherCard({ data }) {
-  // Safety check - don't try to render if we don't have complete weather data yet
-  // This prevents those annoying "cannot read property of undefined" errors
+  // grab the forecast data from my weather storage
+  const { forecastData } = useContext(WeatherContext);
+  // make sure I have weather data before trying to show it
+  // prevents those nasty "can't read property" crashes
   if (!data || !data.main || !data.weather || !data.weather[0]) {
     return <div>Enter a city name and click Search to see weather data</div>;
   }
 
-  // Debug logs - helpful for troubleshooting when temps aren't showing up right
+  // help me debug when temperatures look weird
   console.log("Weather data in WeatherCard:", data); 
   console.log("Raw temperature:", data.main.temp);
   console.log("City name:", data.name);
 
-  // Convert API data to display-friendly numbers
-  // Using Math.round because nobody needs to see "47.3 degrees"
+  // clean up the numbers so they look nice on screen
+  // nobody wants to see "47.382 degrees" - just give me "47"
   const temp = Math.round(data.main.temp);
   const feelsLike = Math.round(data.main.feels_like);
-  const windSpeed = Math.round(data.wind?.speed || 0); // The ?. handles missing wind data gracefully
+  const windSpeed = Math.round(data.wind?.speed || 0); // the ?. keeps it from crashing if wind data is missing
   const windGusts = Math.round(data.wind?.gust || 0);
   const humidity = Math.round(data.main.humidity);
   const pressure = data.main.pressure;
-  const visibility = data.visibility ? Math.round(data.visibility / 1609) : 'N/A'; // Convert meters to miles
-  const cloudiness = data.clouds?.all || 0; // Cloud coverage percentage
+  const visibility = data.visibility ? Math.round(data.visibility / 1609) : 'N/A'; // turn meters into miles because America
+  const cloudiness = data.clouds?.all || 0; // how cloudy it is as a percentage
 
   console.log("Processed temperature:", temp);
   console.log("Processed city:", data.name);
 
   return (
     <div className="MainPage">
-      {/* Left side - Current weather conditions */}
+      {/* left side shows today's weather */}
       <div>
         <div className="weather-nav">Today's Weather</div>
         <div className="weather-nav-text">
-          {/* Main weather display - city, temp, conditions */}
+          {/* the main weather info - city name, temperature, and what it's like outside */}
           <div className="weather-app-panel">
             <div className="box">{data.name}</div>
-            <div className="boxnum">{temp}°F</div> {/* Big temperature display */}
-            <div className="box">{data.weather[0].description}</div> {/* "partly cloudy", etc. */}
+            <div className="boxnum">{temp}°F</div> {/* the big temperature number */}
+            <div className="box">{data.weather[0].description}</div> {/* like "partly cloudy" or "sunny" */}
           </div>
           
-          {/* Additional weather details in a table format */}
-          {/* TODO: Maybe replace this table with CSS grid later for better mobile responsiveness */}
+          {/* extra weather info in a neat table */}
+          {/* might switch this to CSS grid someday to make it work better on phones */}
           <div className="weather-app-status">
             <table>
               <tbody>
@@ -66,40 +72,39 @@ export default function WeatherCard({ data }) {
         </div>
       </div>
 
-      {/* Right side - Weekly forecast (mock data for now) */}
+      {/* right side shows the 5-day forecast */}
       <div>
-        <div className="Firstpage-Nav">{data.name} weather this week</div>
-        <div className="page-nav-text">
-          {/* 5-day temperature forecast - using variations of current temp since we don't have forecast API */}
-          {/* In the future, we could get this from a different API endpoint */}
-          <div className="date-slots">
-            <div className="slot">{temp - 2}</div> {/* Today -2 */}
-            <div className="slot">{temp}</div> {/* Current temp */}
-            <div className="slot">{temp + 3}</div> {/* Today +3 */}
-            <div className="slot">{temp + 5}</div> {/* Today +5 */}
-            <div className="slot">{temp + 7}</div> {/* Today +7 */}
+        <div className="Firstpage-Nav">{data.name} • 5-Day Forecast</div>
+        <div className="page-nav-text forecast-pane">
+          <div className="forecast-grid">
+            {forecastData.length === 0 && (
+              <div className="forecast-empty">Search a city to load its forecast...</div>
+            )}
+            {forecastData.map((day) => (
+              <div key={day.date} className="forecast-item">
+                <div className="forecast-date">
+                  {new Date(day.date).toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric' })}
+                </div>
+                <img
+                  className="forecast-icon"
+                  src={`https://openweathermap.org/img/wn/${day.icon}@2x.png`}
+                  alt={day.description}
+                  loading="lazy"
+                />
+                <div className="forecast-temps">
+                  <span className="temp-high">{day.max}°</span>
+                  <span className="temp-low">{day.min}°</span>
+                </div>
+                <div className="forecast-desc">{day.description}</div>
+              </div>
+            ))}
           </div>
-          
-          {/* Weather details using actual API data */}
-          <div className="bottomslot">
-            <div className="weather-details">
-              <div className="weather-detail">
-                <span>Humidity:</span>
-                <span>{humidity}%</span>
-              </div>
-              <div className="weather-detail">
-                <span>Feels like:</span>
-                <span>{feelsLike}°F</span>
-              </div>
-              <div className="weather-detail">
-                <span>Pressure:</span>
-                <span>{data.main.pressure} hPa</span>
-              </div>
-              <div className="weather-detail">
-                <span>Visibility:</span>
-                <span>{Math.round(data.visibility / 1609)} mi</span>
-              </div>
-            </div>
+          {/* some extra current weather details at the bottom */}
+          <div className="current-extra">
+            <div><strong>Humidity:</strong> {humidity}%</div>
+            <div><strong>Feels:</strong> {feelsLike}°F</div>
+            <div><strong>Pressure:</strong> {pressure} hPa</div>
+            <div><strong>Visibility:</strong> {visibility} mi</div>
           </div>
         </div>
       </div>

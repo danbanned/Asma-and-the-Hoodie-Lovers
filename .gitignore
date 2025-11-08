@@ -26,3 +26,5 @@ dist-ssr
 # Environment files (important!)
 *.env
 .env.local
+CODE_OVERVIEW.md
+TECH_GLOSSARY.md

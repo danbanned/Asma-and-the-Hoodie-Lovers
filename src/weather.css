@@ -1,26 +1,27 @@
-/* Reset and base styles */
+/* reset everything so all browsers behave the same way */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
-/* Body styling to match wireframe */ /* */
+/* main page styling to match my design */
 body { 
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
-  background-color: #f5f5f5;
+  /* nice subtle gradient background to make it look polished */
+  background: linear-gradient(180deg, #eef4ff 0%, #f7fafc 100%);
   color: #333;
   line-height: 1.6;
 }
 
-/* App container */
+/* main app wrapper - keeps everything centered and not too wide */
 .App {
   max-width: 1200px;
   margin: 0 auto;
   padding: 20px;
 }
 
-/* App title */
+/* the main title at the top */
 .App h1 {
   text-align: center;
   color: #333;
@@ -29,7 +30,7 @@ body {
   margin-bottom: 2rem;
 }
 
-/* Search bar container */
+/* the search bar area */
 .App > div:nth-child(2) {
   display: flex;
   justify-content: center;
@@ -37,7 +38,7 @@ body {
   margin-bottom: 2rem;
 }
 
-/* Input field */
+/* the text input where you type city names */
 input[type="text"] {
   padding: 12px 16px;
   font-size: 14px;
@@ -53,7 +54,7 @@ input[type="text"]:focus {
   box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.2);
 }
 
-/* Button */
+/* the search button */
 button {
   padding: 12px 20px;
   font-size: 14px;
@@ -70,14 +71,14 @@ button:hover {
   background: #357abd;
 }
 
-/* Weather card loading state */
+/* placeholder text when loading weather */
 .weather-card {
   text-align: center;
   color: #666;
   padding: 2rem;
 }
 
-/* Main weather container - Two cards side by side */
+/* main layout - two weather cards side by side */
 .MainPage {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -85,9 +86,9 @@ button:hover {
   margin-bottom: 2rem;
 }
 
-/* Weather navigation header - Today's Weather Card */
+/* header for the left card that says "Today's Weather" */
 .weather-nav {
-  background: #4a90e2;
+  background: linear-gradient(135deg, #4a90e2 0%, #6aa9f4 100%);
   color: white; 
   padding: 8px 16px;
   font-size: 14px;
@@ -106,7 +107,7 @@ button:hover {
   margin: 0;
 }
 
-/* Weather details section in left card */
+/* the extra weather details table in the left card */
 .weather-app-status {
   background: white;
   padding: 20px;
@@ -143,14 +144,14 @@ button:hover {
   font-weight: 400;
 }
 
-/* Remove hover effects for cleaner look */
+/* turn off hover effects to keep it simple */
 .weather-app-status tbody tr:hover {
   background: none;
 }
 
-/* First page navigation - Weekly Weather Card Header */
+/* header for the right card with the forecast */
 .Firstpage-Nav {
-  background: #4a90e2;
+  background: linear-gradient(135deg, #4a90e2 0%, #6aa9f4 100%);
   color: white;
   padding: 8px 16px;
   font-size: 14px;
@@ -169,7 +170,7 @@ button:hover {
   margin: 0;
 }
 
-/* Weather main panel - Today's weather display */
+/* the main today's weather display area */
 .weather-app-panel {
   background: white;
   padding: 30px 20px;
@@ -180,7 +181,7 @@ button:hover {
   gap: 20px;
 }
 
-/* City name */
+/* city name styling */
 .box {
   font-size: 18px;
   color: #333;
@@ -189,7 +190,7 @@ button:hover {
   padding: 0;
 }
 
-/* Temperature display */
+/* the big temperature number */
 .boxnum {
   font-size: 72px;
   font-weight: 300;
@@ -199,22 +200,22 @@ button:hover {
   line-height: 1;
 }
 
-/* Weather description */
+/* weather description like "partly cloudy" */
 .box:last-child {
   font-size: 16px;
   color: #666;
   font-weight: 400;
 }
 
-/* Weekly forecast section - Right card content */
+/* forecast area in the right card */
 .dates {
-  /* This will be handled by the page-nav-text container */
+  /* styling is handled by the parent container */
   margin: 0;
   padding: 0;
   background: none;
 }
 
-/* Weekly temperature row */
+/* row of temperature numbers for the week */
 .date-slots {
   display: flex;
   justify-content: space-between;
@@ -238,7 +239,7 @@ button:hover {
   color: #333;
 }
 
-/* Weather conditions below temperatures */
+/* weather descriptions under each day's temperature */
 .slot::after {
   content: "Mostly Cloudy";
   font-size: 12px;
@@ -253,7 +254,7 @@ button:hover {
 .slot:nth-child(4)::after { content: "Mostly Cloudy thursday"; }
 .slot:nth-child(5)::after { content: "Mostly Cloudy friday"; }
 
-/* Bottom section with weather details */
+/* bottom area with extra weather info */
 .bottomslot {
   background: none;
   padding: 0;
@@ -262,10 +263,10 @@ button:hover {
 }
 
 .bottomslot p {
-  display: none; /* Hide the default text */
+  display: none; /* hide the placeholder text */
 }
 
-/* Weather details grid */
+/* grid layout for weather details */
 .weather-details {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -288,15 +289,89 @@ button:hover {
 }
 
 .bottomslot button {
-  display: none; /* Hide the button to match wireframe */
+  display: none; /* hide the button to match my design */
 }
 
-/* Add shadow to cards to match wireframe */
+/* nice subtle shadow on the weather cards */
 .weather-nav-text, .page-nav-text {
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  box-shadow: 0 10px 24px rgba(17,24,39,0.08);
 }
 
-/* Weather details styling */
+/* styling for the forecast area */
+.forecast-pane {
+  display: grid;
+  gap: 20px;
+}
+
+.forecast-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 12px;
+}
+
+.forecast-item {
+  background: #fff;
+  border: 1px solid #eaeaea;
+  border-radius: 10px;
+  padding: 12px;
+  text-align: center;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+}
+
+.forecast-date {
+  font-size: 12px;
+  color: #666;
+}
+
+.forecast-icon {
+  width: 56px;
+  height: 56px;
+}
+
+.forecast-temps {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  align-items: baseline;
+}
+
+.temp-high { font-weight: 600; color: #111827; }
+.temp-low { color: #6b7280; }
+
+.forecast-desc {
+  margin-top: 4px;
+  font-size: 12px;
+  color: #4b5563;
+  text-transform: capitalize;
+}
+
+.forecast-empty {
+  grid-column: 1 / -1;
+  color: #6b7280;
+  text-align: center;
+}
+
+.current-extra {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0,1fr));
+  gap: 10px 16px;
+  font-size: 14px;
+  color: #374151;
+}
+
+@media (max-width: 768px) {
+  .forecast-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 480px) {
+  .forecast-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* how the extra weather details look */
 .weather-details {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -321,7 +396,7 @@ button:hover {
   color: #333;
 }
 
-/* Responsive design */
+/* make it work on phones and tablets */
 @media (max-width: 768px) {
   .MainPage {
     grid-template-columns: 1fr;
